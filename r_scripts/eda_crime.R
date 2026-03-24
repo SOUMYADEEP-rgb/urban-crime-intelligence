@@ -3,7 +3,7 @@ library(skimr)
 library(corrplot)
 library(DataExplorer)
 
-data <- read.csv("../data/processed/clean_data.csv")
+data <- read.csv("data/processed/clean_data.csv")
 str(data)
 head(data)
 
@@ -35,5 +35,21 @@ ggplot(data,aes(x=District))+ geom_bar(fill="orange")+ggtitle("Crimes by Distric
 #Domestic vs Non-Domestic
 ggplot(data,aes(x=Domestic))+ geom_bar(fill="pink") + ggtitle("Domestic Crimes")
 
+#Analysis
+ggplot(data,aes(x=Arrest))+geom_bar(fill="yellow")+ggtitle("Arrests Made")
 
+
+#Crime Hotspots
+ggplot(data, aes(x = Longitude, y = Latitude)) +
+  geom_bin2d() +
+  scale_fill_gradient(low = "yellow", high = "red") +
+  ggtitle("Crime Hotspots")
+
+num_data <- data %>% select(where(is.numeric))
+
+cor_matrix <- cor(num_data)
+
+corrplot(cor_matrix, method = "color", tl.cex = 0.7)
+
+create_report(data, output_file = "EDA_Report.html")
 
